@@ -17,3 +17,6 @@ jobs:
         run: 'chmod +x ./gradlew'
       - name: 'Build (Gradle)'
         run: './gradlew build'
+        env:
+          REPOSITORY_USER: ${{ secrets.REPOSITORY_USER }}
+          REPOSITORY_PASSWORD: ${{ secrets.REPOSITORY_PASSWORD }}
