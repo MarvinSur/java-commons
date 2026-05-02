@@ -1,6 +1,5 @@
 import com.palantir.gradle.gitversion.VersionDetails
 import groovy.lang.Closure
-import java.lang.System.getenv
 
 plugins {
     id("java")
@@ -15,6 +14,7 @@ project.version = project.parent?.version!!
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    withSourcesJar()
 }
 
 repositories {
@@ -36,26 +36,14 @@ dependencies {
 }
 
 publishing {
-
     publications {
-        create<MavenPublication>("publish") {
+        create<MavenPublication>("maven") {
             groupId = project.group as String
             artifactId = project.name
             version = project.version as String
             from(components["java"])
         }
     }
-
-    repositories {
-        maven {
-            url = uri("https://repo.mrstudios.pl/public/")
-            credentials {
-                username = getenv("REPOSITORY_USER")
-                password = getenv("REPOSITORY_PASSWORD")
-            }
-        }
-    }
-
 }
 
 tasks {
@@ -69,12 +57,6 @@ tasks {
         testLogging {
             events("passed")
         }
-    }
-
-    build {
-        dependsOn(test)
-        if (versionDetails().branchName == "ver/latest")
-            finalizedBy(publish)
     }
 
 }
